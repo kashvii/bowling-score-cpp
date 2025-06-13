@@ -47,7 +47,7 @@ vector<int> calculateScores(const vector<int>& bowls, int& finalScore) {
 
 // Display per-frame roll and score
 void displayScoreBoard(const vector<int>& bowls, const vector<int>& frameScores) {
-    cout << "\n🎳 Bowling Scoreboard 🎳\n";
+    cout << "\n Bowling Scoreboard \n";
     cout << "--------------------------------------------------\n";
     cout << "| Frame | bowls       | Frame Score | Cumulative |\n";
     cout << "--------------------------------------------------\n";
@@ -90,14 +90,14 @@ void displayScoreBoard(const vector<int>& bowls, const vector<int>& frameScores)
         cout << "--------------------------------------------------\n";
     }
 
-    cout << "\n🎉 Final Score: " << cumulative << " 🎉\n";
+    cout << "\n Final Score: " << cumulative << " \n";
 }
 
 int main() {
     vector<int> bowls;
     int pins;
 
-    cout << "🎮 Bowling Game Score Calculator 🎮\n";
+    cout << " Bowling Game Score Calculator \n";
     cout << "Enter the number of pins knocked down for each roll.\n";
     cout << "(Use 10 for strike, enter all bowls including 10th frame bonus bowls):\n\n";
 
