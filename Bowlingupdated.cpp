@@ -18,29 +18,70 @@ public:
 };
 
 void BowlingGame::inputRolls() {
+    bowls.clear();
     int pins;
+    int frame = 0;
+
     cout << " Bowling Game Score Calculator \n";
-    cout << "Enter the number of pins knocked down for each roll.\n";
-    cout << "(Use 10 for strike, enter all bowls including 10th frame bonus bowls):\n\n";
+    cout << "Enter number of pins knocked down for each roll (0-10).\n";
+    cout << "Note: Strike (10) skips second roll in frames 1–9.\n\n";
 
-    while (bowls.size() < 21) {
-        cout << "Roll " << bowls.size() + 1 << ": ";
-        cin >> pins;
-
-        if (pins < 0 || pins > 10) {
-            cout << "Invalid input. Enter a value between 0 and 10.\n";
+    while (frame < MAX_BOWLFRAMES) {
+        cout << "Frame " << frame + 1 << ", Roll 1: ";
+        if (!(cin >> pins) || pins < 0 || pins > 10) {
+            cout << "Invalid input. Enter a number between 0 and 10.\n";
+            cin.clear();               // Clear error flags
+            cin.ignore(10000, '\n');   // Discard invalid input
             continue;
         }
 
         bowls.push_back(pins);
 
-        if (bowls.size() >= 20) {
-            calculateScores();
-            if (frameScores.size() == 10) break;
+        // If strike and not in 10th frame
+        if (pins == 10 && frame < 9) {
+            cout << "Strike!\n";
+            ++frame;
+            continue;
         }
+
+        // Ask for second roll
+        cout << "Frame " << frame + 1 << ", Roll 2: ";
+        int secondRoll;
+        if (!(cin >> secondRoll) || secondRoll < 0 || secondRoll > 10) {
+            cout << "Invalid input. Enter a number between 0 and 10.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            bowls.pop_back();  // Remove first roll, re-enter both
+            continue;
+        }
+
+        if (pins + secondRoll > 10 && frame < 9) {
+            cout << "Invalid frame total. Roll 1 + Roll 2 > 10.\n";
+            bowls.pop_back();  // Remove first roll
+            continue;
+        }
+
+        bowls.push_back(secondRoll);
+
+        ++frame;
+    }
+
+    // For 10th frame bonus rolls
+    int extraRolls = 0;
+    int last = bowls.size() - 2;
+    if (bowls[last] == 10 || bowls[last] + bowls[last + 1] == 10)
+        extraRolls = (bowls[last] == 10) ? 2 : 1;
+
+    for (int i = 0; i < extraRolls; ++i) {
+        cout << "Bonus Roll " << i + 1 << ": ";
+        if (!(cin >> pins) || pins < 0 || pins > 10) {
+            cout << "Invalid bonus roll.\n";
+            cin.clear(); cin.ignore(10000, '\n'); --i;
+            continue;
+        }
+        bowls.push_back(pins);
     }
 }
-
 void BowlingGame::calculateScores() {
     frameScores.clear();
     finalScore = 0;
